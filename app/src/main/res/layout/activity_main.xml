@@ -7,7 +7,7 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/summNotification"
+        android:id="@+id/bSummonNotification"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
@@ -15,4 +15,13 @@
         android:text="Button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/bSummonNotification2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="52dp"
+        android:text="Button2"
+        app:layout_constraintStart_toStartOf="@+id/bSummonNotification"
+        app:layout_constraintTop_toBottomOf="@+id/bSummonNotification" />
 </androidx.constraintlayout.widget.ConstraintLayout>
