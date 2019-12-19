@@ -13,17 +13,19 @@ import static androidx.core.app.NotificationCompat.PRIORITY_HIGH;
 
 public class Notificator {
 
-    private static final int NOTIFY_ID = 1;             //разделение уведомлений
     private static final String CHANNEL_ID = "CHANNEL_ID";
 
     private NotificationManager notificationManager;
     private Context context;
 
     public Notificator(Context context) {
-        this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        this.context = context;
+        if(this.notificationManager == null) {
+            this.notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        }
+        if(this.context == null) {
+            this.context = context;
+        }
     }
-
 
     /**
      * When the method "createNotification(....)" is called,
@@ -36,9 +38,9 @@ public class Notificator {
      * (ru: если "notifyId" у выведенного уведомления совпадет с "notifyId" у нового,
      * то выведенное сообщение будет заменено новым.)
      *
-     * @param message   notification message
-     * @param title     notification title
-     * @param notifyId  notification id to separate alerts
+     * @param message   notification message (example: message = "Some message")
+     * @param title     notification title (example: title = "Title")
+     * @param notifyId  notification id to separate alerts (example: notifyId = 1)
      */
     public void createNotification(String message, String title, int notifyId) {
         Intent intent = new Intent(context, MainActivity.class);
@@ -52,11 +54,11 @@ public class Notificator {
                         .setSmallIcon(R.drawable.ic_launcher_foreground)        //базовая иконка андроид
                         .setWhen(System.currentTimeMillis())                    //передача текущего времени
                         .setContentIntent(pendingIntent)                        //отложенный интент с флагом обновления
-                        .setContentTitle(title)                           //заголовок уведомления
-                        .setContentText(message)            //текст самого уведомления
+                        .setContentTitle(title)                                 //заголовок уведомления
+                        .setContentText(message)                                //текст самого уведомления
                         .setPriority(PRIORITY_HIGH);                            //приоритет, настраивается
 
-        createChannelIfNeeded(notificationManager);                     //для работы с более поздники версиями андроид
+        createChannelIfNeeded(notificationManager);                             //для работы с более поздники версиями андроид
         notificationManager.notify(notifyId, notificationBuilder.build());
     }
 
