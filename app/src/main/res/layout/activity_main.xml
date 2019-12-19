@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/bSummonNotification"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginTop="56dp"
-        android:text="Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_above="@id/button_timepicker"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="No Alarm set"
+        android:textSize="30sp" />
 
     <Button
-        android:id="@+id/bSummonNotification2"
+        android:id="@+id/button_timepicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:text="Button2"
-        app:layout_constraintStart_toStartOf="@+id/bSummonNotification"
-        app:layout_constraintTop_toBottomOf="@+id/bSummonNotification" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="open time picker" />
+
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button_timepicker"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:text="cancel alarm" />
+
+</RelativeLayout>

@@ -1,47 +1,86 @@
 package ru.reliableteam.pushmessageapp;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.TimePicker;
 
-public class MainActivity extends AppCompatActivity {
+import java.text.DateFormat;
+import java.util.Calendar;
 
-    Button bSummonNotification;
-    Button bSummonNotification2;
-
-    //TODO необходимо создать Notificator
-    Notificator notificator;
+public class MainActivity extends AppCompatActivity implements TimePickerDialog.OnTimeSetListener {
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bSummonNotification = findViewById(R.id.bSummonNotification);
-        bSummonNotification2 = findViewById(R.id.bSummonNotification2);
 
-        //TODO необходимо инициализировать Notificator
-        notificator = new Notificator(getApplicationContext());
+        mTextView = findViewById(R.id.textView);
 
-        bSummonNotification.setOnClickListener(new View.OnClickListener() {
+        Button buttonTimePicker = findViewById(R.id.button_timepicker);
+        buttonTimePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //TODO вызов уведомления
-                notificator.createNotification("Какой то текст...........", "Заголовок", 1);
+                DialogFragment timePicker = new TimePickerFragment();
+                timePicker.show(getSupportFragmentManager(), "time picker");
             }
         });
 
-        bSummonNotification2.setOnClickListener(new View.OnClickListener() {
+        Button buttonCancelAlarm = findViewById(R.id.button_cancel);
+        buttonCancelAlarm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //TODO вызов уведомления
-                notificator.createNotification("Другой текст...........", "Другой заголовок", 2);
+                cancelAlarm();
             }
         });
     }
 
+    @Override
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
 
+        updateTimeText(c);
+        startAlarm(c);
+    }
+
+    private void updateTimeText(Calendar c) {
+        String timeText = "Alarm set for: ";
+        timeText += DateFormat.getTimeInstance(DateFormat.SHORT).format(c.getTime());
+
+        mTextView.setText(timeText);
+    }
+
+    private void startAlarm(Calendar c) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        if (c.before(Calendar.getInstance())) {
+            c.add(Calendar.DATE, 1);
+        }
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pendingIntent);
+    }
+
+    private void cancelAlarm() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, AlertReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 1, intent, 0);
+
+        alarmManager.cancel(pendingIntent);
+        mTextView.setText("Alarm canceled");
+    }
 }
